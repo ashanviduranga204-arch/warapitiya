@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>H/Warapittiya National School – Classroom Monitor</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Sinhala:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--bd:#e2e8f0;--tx:#0f172a;--mu:#64748b;--in:#f1f5f9;--ok:#059669;--okb:#ecfdf5;--bad:#e11d48;--badb:#fff1f2;--wa:#d97706;--wab:#fffbeb;--bl:#2563eb;--ac:#f59e0b;--mub:var(--in);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0b1220;--card:#131c2e;--bd:#243049;--tx:#e5edf8;--mu:#94a3b8;--in:#1b2740;--okb:#0b2a22;--badb:#33121b;--wab:#33260b;--ok:#34d399;--bad:#fb7185;--wa:#fbbf24;--bl:#60a5fa}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--card:#131c2e;--bd:#243049;--tx:#e5edf8;--mu:#94a3b8;--in:#1b2740;--okb:#0b2a22;--badb:#33121b;--wab:#33260b;--ok:#34d399;--bad:#fb7185;--wa:#fbbf24;--bl:#60a5fa}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font-family:Inter,"Noto Sans Sinhala",system-ui,sans-serif;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#0f172a;z-index:50}
+.hd{background:#0f172a;color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:40;border-bottom:1px solid #1e293b}
+.pill{background:#1e293b;border:1px solid #334155;border-radius:999px;padding:.3rem .7rem;font-size:.72rem;color:#e2e8f0;display:inline-flex;gap:.35rem;align-items:center}
+.tab{padding:.4rem .7rem;border-radius:8px;font-size:.75rem;font-weight:700;color:#cbd5e1}.tab.on{background:var(--ac);color:#111}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1rem}
+.mu{color:var(--mu)}
+.inp{background:var(--in);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:.55rem .7rem;font-size:.8rem;width:100%}
+.btn,.btn2{border-radius:10px;padding:.5rem .8rem;font-size:.78rem;font-weight:700}
+.btn{background:var(--ac);color:#111}.btn2{background:var(--in);color:var(--tx);border:1px solid var(--bd)}
+.rc{border:2px solid;border-radius:12px;padding:.75rem;cursor:default}
+.rc[onclick]{cursor:pointer}
+.bd{font-size:.62rem;font-weight:800;padding:.1rem .45rem;border-radius:999px;white-space:nowrap}
+.pulse{animation:pr 1.6s infinite}@keyframes pr{0%{box-shadow:0 0 0 0 rgba(225,29,72,.5)}100%{box-shadow:0 0 0 10px rgba(225,29,72,0)}}
+.toast{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:.65rem .85rem;font-size:.8rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:auto}
+.fi{border-left:4px solid;border-radius:8px;background:var(--in);padding:.5rem .65rem}
+.badge{background:#fff;color:#111;border:2px solid #111;border-radius:14px;padding:.9rem;text-align:center;break-inside:avoid}
+th,td{padding:.55rem .6rem;text-align:left;white-space:nowrap}th{font-size:.68rem;text-transform:uppercase;color:var(--mu)}tr+tr td{border-top:1px solid var(--bd)}
+@media print{.hd,#toasts,.np{display:none!important}body{background:#fff!important;color:#000}body[data-print=log] .dsec:not(#logsec){display:none}body[data-print=qr] #v-dash,body[data-print=qr] #v-scan{display:none}.card{border-color:#999}}
+</style></head>
+<body>
+<header class="hd"><div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+ <div class="flex items-center gap-3"><div class="text-2xl bg-amber-500 rounded-lg px-2 py-1">🏫</div>
+  <div><div class="font-extrabold leading-tight" data-i18n="school"></div><div class="text-[11px]" style="color:#fbbf24" data-i18n="sub"></div></div></div>
+ <div class="flex items-center gap-2 flex-wrap">
+  <span class="pill hidden md:inline-flex">📶 HWNS_STAFF_5G <span style="color:#fbbf24">demo</span></span>
+  <span class="pill" id="sy"></span><button class="pill" id="bl" onclick="tgLang()"></button>
+  <button class="pill" onclick="tgTheme()" aria-label="theme">🌓</button>
+  <nav class="flex gap-1 p-1 rounded-lg" style="background:#1e293b">
+   <button class="tab on" id="t-dash" onclick="tab('dash')" data-i18n="nDash"></button>
+   <button class="tab" id="t-scan" onclick="tab('scan')" data-i18n="nScan"></button>
+   <button class="tab" id="t-qr" onclick="tab('qr')" data-i18n="nQR"></button>
+  </nav></div></div></header>
+<div id="toasts" class="fixed right-3 z-50 flex flex-col gap-2 w-[min(24rem,calc(100%-1.5rem))] pointer-events-none" style="top:calc(env(safe-area-inset-top,0px) + 4.5rem)"></div>
+
+<main class="max-w-7xl mx-auto p-4">
+<section id="v-dash" class="space-y-4">
+ <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 dsec">
+  <div class="card"><div class="text-[11px] font-bold uppercase mu" data-i18n="kTot"></div><div class="text-3xl font-extrabold" id="k0">0</div></div>
+  <div class="card"><div class="text-[11px] font-bold uppercase" style="color:var(--ok)" data-i18n="kOk"></div><div class="text-3xl font-extrabold" style="color:var(--ok)" id="k1">0</div></div>
+  <div class="card"><div class="text-[11px] font-bold uppercase" style="color:var(--bad)" data-i18n="kVac"></div><div class="text-3xl font-extrabold" style="color:var(--bad)" id="k2">0</div></div>
+  <div class="card"><div class="text-[11px] font-bold uppercase" style="color:var(--wa)" data-i18n="kDel"></div><div class="text-3xl font-extrabold" style="color:var(--wa)" id="k3">0</div></div>
+ </div>
+ <div class="grid lg:grid-cols-3 gap-4">
+  <div class="card lg:col-span-2 dsec" id="grid-sec">
+   <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+    <h2 class="font-extrabold" data-i18n="gTitle"></h2>
+    <div class="flex gap-2 np"><select id="gf" class="inp" style="width:auto" onchange="render()"></select><button class="btn2" onclick="resetDemo()" data-i18n="reset"></button></div>
+   </div>
+   <div id="pb" class="mb-3 text-sm font-bold rounded-lg px-3 py-2" style="background:var(--in)"></div><div class="flex flex-wrap gap-x-4 gap-y-1 text-xs mu mb-3">
+    <span>🟢 <span data-i18n="present"></span></span><span>🔴 <span data-i18n="vacant"></span></span><span>🟠 <span data-i18n="awaiting"></span> / <span data-i18n="relief"></span></span><span id="lg"></span></div>
+   <div id="rooms" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3"></div>
+  </div>
+  <div class="space-y-4">
+   <div class="card dsec"><div class="flex justify-between items-center mb-3"><h3 class="font-extrabold" data-i18n="feedT"></h3><span class="bd" style="background:var(--bad);color:#fff" data-i18n="live"></span></div>
+    <div id="feed" class="space-y-2 overflow-y-auto" style="max-height:330px"></div></div>
+   <div class="card dsec np"><h3 class="font-extrabold" data-i18n="dispT"></h3><p class="text-xs mu mb-3" data-i18n="dispSub"></p>
+    <div class="space-y-2"><select id="dr" class="inp"></select><select id="df" class="inp" onchange="loadPh()"></select><input id="dp" class="inp" inputmode="tel" placeholder="WhatsApp 07XXXXXXXX" onchange="savePh()"><button class="btn w-full" onclick="send()" data-i18n="send"></button><button class="btn2 w-full" onclick="wa()" data-i18n="waBtn"></button></div></div>
+  </div>
+ </div>
+ <div class="card dsec" id="logsec">
+  <div class="flex flex-wrap justify-between items-center gap-2 mb-2"><h3 class="font-extrabold" data-i18n="logT"></h3><button class="btn2 np" onclick="pr('log')" data-i18n="print"></button></div>
+  <div class="overflow-x-auto" style="max-height:420px;overflow-y:auto"><table class="w-full text-xs"><thead><tr><th data-i18n="thT"></th><th data-i18n="perW"></th><th data-i18n="thR"></th><th data-i18n="thN"></th><th data-i18n="thS"></th><th data-i18n="thA"></th></tr></thead><tbody id="log"></tbody></table></div>
+ </div>
+</section>
+
+<section id="v-scan" class="hidden max-w-xl mx-auto"><div class="card space-y-4">
+ <div class="text-center"><div class="text-4xl">📷</div><h2 class="font-extrabold text-lg" data-i18n="sHead"></h2><p class="text-xs mu" data-i18n="sSub"></p></div><div id="ra" class="hidden rounded-xl p-3 text-sm font-bold" style="background:var(--wab);border:2px solid var(--wa);color:var(--tx)"><div id="rat"></div><button class="btn mt-2 w-full" onclick="ackRel()" data-i18n="relOk"></button></div>
+ <div><label class="text-xs font-semibold mu" data-i18n="lblT"></label><select id="ts" class="inp mt-1" onchange="sv('rnc-t',this.value);render()"></select></div>
+ <div class="rounded-xl overflow-hidden text-center" style="background:#0f172a;color:#94a3b8;min-height:220px"><div id="qr-reader"></div><div id="ph" class="p-8 text-xs" data-i18n="camHint"></div></div>
+ <div class="flex gap-2"><button id="b1" class="btn flex-1" onclick="startCam()" data-i18n="camOn"></button><button id="b2" class="btn2 flex-1 hidden" onclick="stopCam()" data-i18n="camOff"></button></div>
+ 
+</div></section>
+
+<section id="v-qr" class="hidden"><div class="card">
+ <div class="flex flex-wrap justify-between items-center gap-2 mb-4 np"><div><h2 class="font-extrabold" data-i18n="qT"></h2><p class="text-xs mu" data-i18n="qSub"></p></div><button class="btn" onclick="pr('qr')" data-i18n="qPrint"></button></div>
+ <div id="badges" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+</div></section>
+</main>
+
+<script>
+const $=i=>document.getElementById(i),GRACE=5;
+const ld=k=>{try{return localStorage.getItem(k)}catch(e){return null}},sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const L={en:{school:"H/Warapittiya National School",sub:"Classroom Attendance & Principal Alert System",nDash:"Principal Dashboard",nScan:"Teacher Scanner",nQR:"QR Codes",kTot:"Total Classrooms",kOk:"Teacher Present",kVac:"Vacant / Unattended",kDel:"Delayed / Relief",gTitle:"Classroom Monitoring Matrix",gAll:"All Grades / Labs",gLab:"Labs",gradeW:"Grade",present:"Teacher present",vacant:"No teacher",awaiting:"Awaiting",relief:"Relief teacher",min:"min",since:"In since",noT:"Without teacher for",legend:"Rooms turn red after {g} min without a teacher",feedT:"Live Activity Feed",live:"LIVE",dispT:"Dispatch Relief Teacher",dispSub:"Tap a vacant room, pick a free teacher and send.",selRoom:"Select vacant room",selFree:"Select free teacher",send:"Send",logT:"Daily Attendance Log",print:"Print / PDF",thT:"Time",thR:"Room",thN:"Teacher",thS:"Subject",thA:"Action",IN:"Check-in",OUT:"Check-out",AUTO:"Auto check-out",RELIEF:"Relief sent",ALERT:"No teacher alert",sHead:"Classroom QR Check-In / Out",sSub:"Scan the QR badge at the door. Scan again when leaving.",lblT:"Select Teacher",camOn:"Turn On Camera",camOff:"Stop Camera",camHint:"Point the camera at the classroom QR badge",simT:"Quick test (no camera needed)",qT:"Printable Classroom QR Codes",qSub:"Print and stick next to each classroom door.",qPrint:"Print All Badges",reset:"Reset day",tIn:"{t} checked in to {r}",tOut:"{t} left {r}",tMove:"{t} moved from {o} to {r}",tAl:"{r}: no teacher for {m} min!",tRel:"{t} sent to {r}",tBad:"Unknown QR code",tCam:"Camera unavailable",tPick:"Choose a room and a teacher",free:"free",waBtn:"💬 Dispatch + WhatsApp",tNoPh:"Enter the teacher’s WhatsApp number first",relMsg:"Relief duty: please go to {r} now",relOk:"I am on my way ✔",tAck:"Principal has been notified",perW:"Period",ivW:"Interval",clW:"School closed",endsIn:"ends in {m} min",hours:"School hours 7.50–1.30",tClosed:"Scanning is closed now. School hours are 7.50–1.30",syOn:"Live sync",syOff:"This device only",syRO:"Read-only: ask the owner for Contributor access"},
+si:{school:"හ/වරපිටිය ජාතික පාසල",sub:"පන්ති කාමර පැමිණීම සහ විදුහල්පති දැනුම්දීමේ පද්ධතිය",nDash:"විදුහල්පති පුවරුව",nScan:"ගුරු ස්කෑනරය",nQR:"QR කේත",kTot:"මුළු පන්ති කාමර",kOk:"ගුරුවරයා සිටී",kVac:"ගුරුවරයෙකු නැත",kDel:"ප්‍රමාදයි / ආදේශක",gTitle:"පන්ති කාමර සජීවී නිරීක්ෂණය",gAll:"සියලුම ශ්‍රේණි / විද්‍යාගාර",gLab:"විද්‍යාගාර",gradeW:"ශ්‍රේණිය",present:"ගුරුවරයා සිටී",vacant:"ගුරුවරයෙකු නැත",awaiting:"බලාපොරොත්තුවෙන්",relief:"ආදේශක ගුරුවරයා",min:"මිනි.",since:"පැමිණි වේලාව",noT:"ගුරුවරයෙකු නැතිව",legend:"ගුරුවරයෙකු නැතිව මිනිත්තු {g}ක් ගියාම රතු වේ",feedT:"සජීවී ක්‍රියාකාරකම්",live:"සජීවී",dispT:"ආදේශක ගුරුවරයෙකු යොමුකරන්න",dispSub:"හිස් පන්තියක් තෝරා, නිදහස් ගුරුවරයෙකු තෝරා යොමුකරන්න.",selRoom:"හිස් පන්තිය තෝරන්න",selFree:"නිදහස් ගුරුවරයා තෝරන්න",send:"යොමුකරන්න",logT:"දෛනික පැමිණීමේ වාර්තාව",print:"මුද්‍රණය / PDF",thT:"වේලාව",thR:"පන්තිය",thN:"ගුරුවරයා",thS:"විෂය",thA:"ක්‍රියාව",IN:"පැමිණීම",OUT:"පිටවීම",AUTO:"ස්වයංක්‍රීය පිටවීම",RELIEF:"ආදේශක යැවීම",ALERT:"ගුරුවරයෙකු නැති අනතුරු ඇඟවීම",sHead:"පන්ති කාමර QR පැමිණීම / පිටවීම",sSub:"දොර අසල QR එක ස්කෑන් කරන්න. පිටවෙද්දී නැවත ස්කෑන් කරන්න.",lblT:"ගුරුවරයා තෝරන්න",camOn:"කැමරාව ක්‍රියාත්මක කරන්න",camOff:"කැමරාව නවත්වන්න",camHint:"කැමරාව පන්තියේ QR එකට යොමු කරන්න",simT:"ඉක්මන් පරීක්ෂාව (කැමරාව අවශ්‍ය නැත)",qT:"මුද්‍රණය කළ හැකි QR කේත",qSub:"මුද්‍රණය කර පන්ති කාමර දොර අසල අලවන්න.",qPrint:"සියල්ල මුද්‍රණය කරන්න",reset:"නැවත ආරම්භ කරන්න",tIn:"{t} {r} වෙත පැමිණියා",tOut:"{t} {r} අත්හැරියා",tMove:"{t} {o} සිට {r} වෙත ගියා",tAl:"{r}: මිනිත්තු {m}ක් ගුරුවරයෙකු නැත!",tRel:"{t} {r} වෙත යොමුකළා",tBad:"හඳුනාගත නොහැකි QR කේතයක්",tCam:"කැමරාව භාවිතා කළ නොහැක",tPick:"පන්තිය සහ ගුරුවරයා තෝරන්න",free:"නිදහස්",waBtn:"💬 යොමුකර WhatsApp යවන්න",tNoPh:"මුලින් ගුරුවරයාගේ WhatsApp අංකය ඇතුළත් කරන්න",relMsg:"ආදේශක රාජකාරිය: දැන්ම {r} වෙත යන්න",relOk:"මම යනවා ✔",tAck:"විදුහල්පතිවරුන්ට දැනුම් දුන්නා",perW:"කාලච්ඡේදය",ivW:"විවේකය",clW:"පාසල වසා ඇත",endsIn:"තව මිනිත්තු {m}කින් අවසන්",hours:"පාසල් වේලාව 7.50–1.30",tClosed:"දැන් ස්කෑන් කළ නොහැක. පාසල් වේලාව 7.50–1.30",syOn:"සජීවී සමමුහුර්තය",syOff:"මෙම උපාංගය පමණි",syRO:"කියවීම පමණි: හිමිකරුගෙන් Contributor ප්‍රවේශය ඉල්ලන්න"}};
+let lang=ld("rnc-lang")||"en",S,qr=null,last=0,ac;
+const th0=ld("rnc-th");if(th0)document.documentElement.dataset.theme=th0;
+const t=(k,o)=>{let s=L[lang][k]||L.en[k]||k;for(const x in o||{})s=s.replace("{"+x+"}",o[x]);return s};
+const TE=[{n:"Mr. S. Perera",s:"Mathematics",i:"ගණිතය"},{n:"Mrs. K. Fernando",s:"Science",i:"විද්‍යාව"},{n:"Mr. M. Silva",s:"English",i:"ඉංග්‍රීසි"},{n:"Mrs. T. Wickramasinghe",s:"Sinhala",i:"සිංහල"},{n:"Mr. R. De Silva",s:"History",i:"ඉතිහාසය"},{n:"Mrs. A. Ratnayake",s:"ICT",i:"තොරතුරු තාක්ෂණය"},{n:"Mr. K. Samarasinghe",s:"Geography",i:"භූගෝල විද්‍යාව"},{n:"Mrs. N. Jayawardena",s:"Commerce",i:"වාණිජ"},{n:"Mr. W. Gamage",s:"Art",i:"චිත්‍ර"}];
+const sj=n=>{const e=TE.find(x=>x.n===n);return e?(lang==="si"?e.i:e.s):"—"};
+const hm=ms=>new Date(ms).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+const mins=r=>Math.max(0,Math.floor((Date.now()-r.vs)/6e4));
+const PR=[[470,510],[510,550],[550,590],[590,630],[650,690],[690,730],[730,770],[770,810]];
+const nm=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()+d.getSeconds()/60};
+const atM=m=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime()+m*6e4};
+const fm=m=>((Math.floor(m/60)+11)%12+1)+"."+String(m%60).padStart(2,"0");
+function curK(){const n=nm();for(let i=0;i<8;i++)if(n>=PR[i][0]&&n<PR[i][1])return i+1;return n>=630&&n<650?"IV":"X"}
+const inP=()=>typeof curK()==="number";
+const st=r=>r.teacher?(r.relief?"relief":"ok"):!inP()?"idle":(mins(r)>=GRACE?"vac":"delay");
+function tick(){const k=curK(),num=typeof k==="number",s0=num?atM(PR[k-1][0]):Date.now();if(S.pk===k)return false;const prev=S.pk;S.pk=k;if(prev!==undefined&&(!num||typeof prev==="number"))S.R.forEach(r=>{if(r.teacher)out(r,"AUTO")});S.R.forEach(r=>{if(!r.teacher){r.vs=s0;r.al=false}});return true}
+function paintP(){const k=curK(),n=nm();let s;if(typeof k==="number")s="🔔 "+t("perW")+" "+k+" · "+fm(PR[k-1][0])+"–"+fm(PR[k-1][1])+" · "+t("endsIn",{m:Math.ceil(PR[k-1][1]-n)});else if(k==="IV")s="☕ "+t("ivW")+" · 10.30–10.50 · "+t("endsIn",{m:Math.ceil(650-n)});else s="🏫 "+t("clW")+" · "+t("hours");$("pb").textContent=s}
+function seed(){const n=Date.now(),k=curK(),v0=typeof k==="number"?atM(PR[k-1][0]):n;
+ const d=[["Grade 6-A","6","Mr. S. Perera",40],["Grade 6-B","6",0,12],["Grade 7-A","7","Mrs. K. Fernando",35],["Grade 7-B","7",0,2],["Grade 8-A","8",0,3],["Grade 8-B","8","Mr. M. Silva",30],["Grade 9-A","9",0,9],["Grade 9-B","9","Mrs. T. Wickramasinghe",45],["Grade 10-A","10","Mr. R. De Silva",20],["Grade 10-B","10",0,4.5],["Grade 11-A","11",0,15],["Grade 11-B","11","Mrs. A. Ratnayake",25],["Science Lab 01","LAB",0,.5],["ICT Lab","LAB",0,7]];
+ const R=d.map(([id,g])=>({id,g,teacher:null,since:null,vs:v0,relief:false,al:false}));
+ return{v:2,ts:n,pk:k,R,logs:R.filter(r=>r.teacher).map(r=>({t:r.since,room:r.id,teacher:r.teacher,act:"IN"})).sort((a,b)=>b.t-a.t)}}
+function load(){try{const x=JSON.parse(ld("rnc-s"));if(x&&x.v===2&&new Date(x.ts).toDateString()===new Date().toDateString())return x;if(x&&x.ph){const s=seed();s.ph=x.ph;return s}}catch(e){}return seed()}
+let dbDoc=null,busy=0,again=0,first=1,roWarn=0;const bc=window.BroadcastChannel?new BroadcastChannel("hwns-sync"):null;
+function save(){S.u=Date.now();S.logs=S.logs.slice(0,200);sv("rnc-s",JSON.stringify(S));try{bc&&bc.postMessage(S)}catch(e){}push()}
+function push(){if(!dbDoc)return;if(busy){again=1;return}busy=1;dbDoc.set(JSON.parse(JSON.stringify(S))).catch(()=>{if(!roWarn){roWarn=1;toast(t("syRO"),"wa")}}).finally(()=>{busy=0;if(again){again=0;push()}})}
+function adopt(x,note){const pm=S.logs[0]?S.logs[0].t:0;if(!x.ph&&S.ph)x.ph=S.ph;S=x;sv("rnc-s",JSON.stringify(S));if(note){const nw=S.logs.filter(l=>l.t>pm&&!(l.act==="RELIEF"&&l.teacher===$("ts").value)).slice(0,3).reverse();nw.forEach(l=>toast((l.act==="ALERT"?"⚠ ":"")+t(l.act)+" · "+l.room+(l.teacher!=="—"?" · "+l.teacher:""),l.act==="ALERT"?"bad":"ok"));if(nw.length)snd(nw.some(l=>l.act==="ALERT"||l.act==="OUT"||l.act==="AUTO")?"out":"in")}render()}
+function paintSync(){$("sy").textContent=(dbDoc?"🟢 ":"⚪ ")+t(dbDoc?"syOn":"syOff")}
+if(bc)bc.onmessage=e=>{const x=e.data;if(x&&x.R&&x.v===2&&(x.u||0)>(S.u||0))adopt(x,1)};
+async function initSync(){try{if(!window.claude)return;const db=await claude.use("db");if(!db)return;dbDoc=db.doc("monitor/state");paintSync();dbDoc.onSnapshot(s=>{const x=s.exists?s.data():null;if(first){first=0;if(x&&x.R&&x.v===2&&new Date(x.ts).toDateString()===new Date().toDateString())adopt(JSON.parse(JSON.stringify(x)),0);else{if(x&&x.ph&&!S.ph)S.ph=JSON.parse(JSON.stringify(x.ph));push()}return}if(x&&x.R&&x.v===2&&(x.u||0)>(S.u||0))adopt(JSON.parse(JSON.stringify(x)),1)},()=>{dbDoc=null;paintSync()})}catch(e){}}
+const lg=(room,teacher,act)=>S.logs.unshift({t:Date.now(),room,teacher,act,p:inP()?curK():0});
+function toast(m,k){const d=document.createElement("div");d.className="toast";d.style.borderLeft="4px solid var(--"+(k||"ok")+")";d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),5500)}
+function snd(k){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain(),n=ac.currentTime;o.connect(g);g.connect(ac.destination);o.type=k==="in"?"sine":"triangle";(k==="in"?[587,880]:[440,880,440]).forEach((v,i)=>o.frequency.setValueAtTime(v,n+i*.12));g.gain.setValueAtTime(.2,n);g.gain.exponentialRampToValueAtTime(.001,n+.5);o.start();o.stop(n+.5)}catch(e){}}
+function out(r,a){lg(r.id,r.teacher,a||"OUT");r.teacher=null;r.relief=false;r.vs=Date.now();r.al=false}
+function scan(id){if(tick())save();const r=S.R.find(x=>x.id===id);if(!r)return toast(t("tBad"),"bad");if(nm()<460||nm()>=810)return toast(t("tClosed"),"wa");const tn=$("ts").value;
+ if(r.teacher===tn){out(r);snd("out");toast(t("tOut",{t:tn,r:id}),"wa")}
+ else{const o=S.R.find(x=>x.teacher===tn);if(o)out(o,"AUTO");if(r.teacher)out(r);r.teacher=tn;r.since=Date.now();r.relief=false;r.al=false;lg(id,tn,"IN");snd("in");toast(o?t("tMove",{t:tn,o:o.id,r:id}):t("tIn",{t:tn,r:id}))}
+ save();render()}
+function send(){if(tick())save();const a=$("dr").value,b=$("df").value;if(!a||!b)return toast(t("tPick"),"wa");if(!inP())return toast(t("tClosed"),"wa");const r=S.R.find(x=>x.id===a);r.teacher=b;r.since=Date.now();r.relief=true;r.ack=false;r.al=false;lg(a,b,"RELIEF");snd("in");toast(t("tRel",{t:b,r:a}),"bl");save();render()}
+let relSeen="",phFor="";
+function normPh(p){let d=(p||"").replace(/\D/g,"");if(d.startsWith("94"))return d;if(d.startsWith("0"))d=d.slice(1);return d.length===9?"94"+d:""}
+function savePh(){const b=$("df").value;if(!b)return;S.ph=S.ph||{};S.ph[b]=$("dp").value.trim();save()}
+function loadPh(){phFor=$("df").value;$("dp").value=(S.ph&&S.ph[phFor])||""}
+function wa(){const a=$("dr").value,b=$("df").value;if(!a||!b)return toast(t("tPick"),"wa");if(!inP())return toast(t("tClosed"),"wa");const n=normPh($("dp").value);if(!n)return toast(t("tNoPh"),"wa");savePh();const m="📢 "+L.si.school+" / "+L.en.school+"\n"+b+": ආදේශක රාජකාරිය — දැන්ම "+a+" වෙත යන්න.\nRelief duty — please go to "+a+" now (Period "+curK()+").";send();window.open("https://wa.me/"+n+"?text="+encodeURIComponent(m),"_blank")}
+function relBanner(){const tn=$("ts").value,r=S.R.find(x=>x.relief&&x.teacher===tn&&!x.ack),b=$("ra");if(!r){b.classList.add("hidden");return}b.classList.remove("hidden");$("rat").textContent="📢 "+t("relMsg",{r:r.id});const key=r.id+r.since;if(relSeen!==key){relSeen=key;snd("out");try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}toast(t("relMsg",{r:r.id}),"bl")}}
+function ackRel(){const tn=$("ts").value,r=S.R.find(x=>x.relief&&x.teacher===tn&&!x.ack);if(!r)return;r.ack=true;save();render();toast(t("tAck"),"ok")}
+const pick=id=>{$("dr").value=id;$("df").focus()};
+function chk(){if($("v-dash").classList.contains("hidden"))return;let c=0;S.R.forEach(r=>{if(st(r)==="vac"&&!r.al){r.al=true;c++;lg(r.id,"—","ALERT");toast(t("tAl",{r:r.id,m:mins(r)}),"bad")}});if(c){snd("out");save();render()}}
+function fill(id,ph,opts){const e=$(id),v=e.value,h=(ph?`<option value="">${ph}</option>`:"")+opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("");
+ if(e.dataset.h===h)return;e.dataset.h=h;e.innerHTML=h;e.value=v;if(!e.value&&!ph)e.selectedIndex=0}
+function render(){
+ const c={ok:0,vac:0,del:0};S.R.forEach(r=>{const s=st(r);s==="ok"?c.ok++:s==="vac"?c.vac++:s!=="idle"&&c.del++});
+ paintP();relBanner();$("k0").textContent=S.R.length;$("k1").textContent=c.ok;$("k2").textContent=c.vac;$("k3").textContent=c.del;
+ const f=$("gf").value||"ALL",ic={IN:"✅",OUT:"🚪",AUTO:"🔄",RELIEF:"🔁",ALERT:"⚠️"},kc={IN:"ok",OUT:"wa",AUTO:"wa",RELIEF:"bl",ALERT:"bad"};
+ $("rooms").innerHTML=S.R.filter(r=>f==="ALL"||r.g===f).map(r=>{const s=st(r),k=s==="ok"?"ok":s==="vac"?"bad":s==="idle"?"mu":"wa",lab={ok:"present",vac:"vacant",delay:"awaiting",relief:"relief",idle:curK()==="IV"?"ivW":"clW"}[s];
+  return `<div class="rc ${s==="vac"?"pulse":""}" style="border-color:var(--${k});background:var(--${k}b)" ${r.teacher?"":`onclick="pick('${r.id}')"`}><div class="flex justify-between items-start gap-1"><b class="text-sm">${r.id}</b><span class="bd" style="background:var(--${k});color:${k==="wa"?"#111":"#fff"}">${t(lab)}</span></div>${r.teacher?`<div class="mt-2 text-xs font-bold">${r.teacher}${r.relief?(r.ack?" ✔":" ⏳"):""}</div><div class="text-[11px] mu">${sj(r.teacher)} · ${t("since")} ${hm(r.since)}</div>`:s==="idle"?`<div class="mt-3 text-xs mu">—</div>`:`<div class="mt-3 text-xs mu">⏱ ${t("noT")} <b style="color:var(--${k})">${mins(r)} ${t("min")}</b></div>`}</div>`}).join("");
+ $("feed").innerHTML=S.logs.slice(0,12).map(l=>`<div class="fi" style="border-color:var(--${kc[l.act]})"><div class="text-xs"><b>${ic[l.act]} ${l.room}</b> — ${t(l.act)}</div><div class="text-[11px] mu">${l.teacher!=="—"?l.teacher+" · ":""}${hm(l.t)}</div></div>`).join("");
+ $("log").innerHTML=S.logs.slice(0,100).map(l=>`<tr><td>${hm(l.t)}</td><td>${l.p||"—"}</td><td><b>${l.room}</b></td><td>${l.teacher}</td><td>${l.teacher==="—"?"—":sj(l.teacher)}</td><td><span class="bd" style="background:var(--${kc[l.act]});color:${kc[l.act]==="wa"?"#111":"#fff"}">${t(l.act)}</span></td></tr>`).join("");
+ fill("dr",t("selRoom"),S.R.filter(r=>!r.teacher).map(r=>[r.id,r.id+" · "+mins(r)+" "+t("min")]));
+ fill("df",t("selFree"),TE.filter(e=>!S.R.some(r=>r.teacher===e.n)).map(e=>[e.n,e.n+" ("+t("free")+")"]));
+ fill("ts",null,TE.map(e=>[e.n,e.n+" ("+sj(e.n)+")"]));if($("df").value!==phFor)loadPh();
+}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+ $("bl").textContent=lang==="en"?"සිංහල":"English";paintSync();$("lg").textContent=t("legend",{g:GRACE});
+ fill("gf",null,[["ALL",t("gAll")],...["6","7","8","9","10","11"].map(g=>[g,t("gradeW")+" "+g]),["LAB",t("gLab")]])}
+function tgLang(){lang=lang==="en"?"si":"en";sv("rnc-lang",lang);applyLang();render()}
+function tgTheme(){const d=document.documentElement,cur=d.dataset.theme||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"),n=cur==="dark"?"light":"dark";d.dataset.theme=n;sv("rnc-th",n)}
+function tab(v){["dash","scan","qr"].forEach(x=>{$("v-"+x).classList.toggle("hidden",x!==v);$("t-"+x).classList.toggle("on",x===v)});if(v!=="scan")stopCam()}
+function startCam(){try{qr=new Html5Qrcode("qr-reader");qr.start({facingMode:"environment"},{fps:10,qrbox:220},x=>{if(Date.now()-last>3000){last=Date.now();scan(x.replace(/^(RNC|HWNS)\|/,""))}},()=>{}).then(()=>{$("ph").classList.add("hidden");$("b1").classList.add("hidden");$("b2").classList.remove("hidden")}).catch(()=>{qr=null;toast(t("tCam"),"bad")})}catch(e){toast(t("tCam"),"bad")}}
+function stopCam(){const q=qr;qr=null;$("ph").classList.remove("hidden");$("b1").classList.remove("hidden");$("b2").classList.add("hidden");if(q)q.stop().then(()=>q.clear()).catch(()=>{})}
+function badges(){$("badges").innerHTML="";S.R.forEach(r=>{const d=document.createElement("div");d.className="badge";d.innerHTML=`<div class="text-[11px] font-bold tracking-wide">H/WARAPITTIYA NATIONAL SCHOOL</div><div class="text-xl font-extrabold my-1">${r.id}</div><div class="flex justify-center"></div><div class="text-[10px] mt-1">Scan to check in / out · ස්කෑන් කරන්න</div>`;$("badges").appendChild(d);if(window.QRCode)new QRCode(d.children[2],{text:"HWNS|"+r.id,width:150,height:150})})}
+function pr(m){if(m==="qr")tab("qr");document.body.dataset.print=m;window.print()}
+window.onafterprint=()=>delete document.body.dataset.print;
+function resetDemo(){const p=S.ph;S=seed();if(p)S.ph=p;save();render()}
+S=load();applyLang();render();{const tt=ld("rnc-t");if(tt)$("ts").value=tt}relBanner();badges();
+
+if(tick())save();initSync();chk();setInterval(()=>{if(tick())save();chk();render()},15000);
+</script></body></html>
